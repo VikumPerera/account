@@ -3,17 +3,12 @@ server:
 spring:
   application:
     name: account
-  h2:
-    console:
-      enabled: 'true'
   datasource:
-    username: sa
-    url: jdbc:h2:mem:account
-    driverClassName: org.h2.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/account?createDatabaseIfNotExist=true
+    username: root
     password: password
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
 
