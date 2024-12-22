@@ -90,6 +90,14 @@
 <!--			<groupId>org.springframework.cloud</groupId>-->
 <!--			<artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
 <!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -124,7 +132,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>vikum92/${project.artifactId}:s7</image>
+						<image>vikum92/${project.artifactId}:s8</image>
 					</to>
 				</configuration>
 			</plugin>
