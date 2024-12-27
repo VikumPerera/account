@@ -6,6 +6,8 @@ import com.microservice.account.dto.AccountContactInfoDTO;
 import com.microservice.account.dto.CustomerDTO;
 import com.microservice.account.dto.ErrorResponseDTO;
 import com.microservice.account.dto.ResponseDTO;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -23,6 +27,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.TimeoutException;
+
 @Tag(
         name = "CRUD REST APIs for Accounts in EazyBank",
         description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE account details"
@@ -31,6 +37,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated
 public class AccountController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private AccountService accountService;
 
@@ -190,9 +198,17 @@ public class AccountController {
                     )
             )
     })
+    @Retry(name = "getVersion",fallbackMethod = "getVersionFallback")
     @GetMapping("/version")
-    public ResponseEntity<String> getVersion() {
-        return ResponseEntity.ok(buildVersion);
+    public ResponseEntity<String> getVersion() throws TimeoutException {
+        logger.debug("Method retry called");
+        throw new TimeoutException();
+        //return ResponseEntity.ok(buildVersion);
+    }
+
+    public ResponseEntity<String> getVersionFallback(Throwable throwable) {
+        logger.debug("Fallback method called");
+        return ResponseEntity.ok("Fallback version");
     }
 
     @Operation(
@@ -212,9 +228,15 @@ public class AccountController {
                     )
             )
     })
+
+    @RateLimiter(name = "getJavaVersion", fallbackMethod = "getJavaVersionFallback")
     @GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion() {
         return ResponseEntity.ok(environment.getProperty("java.version"));
+    }
+
+    public ResponseEntity<String> getJavaVersionFallback(Throwable throwable) {
+        return ResponseEntity.ok("Java 21");
     }
 
     @Operation(
