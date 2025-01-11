@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2024.0.0</spring-cloud.version>
+		<otelVersion>1.33.5</otelVersion>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -102,6 +103,16 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.opentelemetry.javaagent</groupId>
+			<artifactId>opentelemetry-javaagent</artifactId>
+			<version>${otelVersion}</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -136,7 +147,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>vikum92/${project.artifactId}:s10</image>
+						<image>vikum92/${project.artifactId}:s11</image>
 					</to>
 				</configuration>
 			</plugin>
