@@ -19,6 +19,6 @@ public class Account extends BaseEntity{
 
     private String branchAddress;
 
-
+    private Boolean communicationStatus;
 
 }

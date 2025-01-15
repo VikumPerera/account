@@ -12,4 +12,6 @@ public interface AccountService {
 
     boolean deleteAccount(String mobileNumber);
 
+    boolean updateCommunicationStatus(Long accountNumber);
+
 }
